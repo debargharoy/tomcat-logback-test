@@ -5,24 +5,48 @@ import java.util.Map;
 
 public class AccessLoggingMDC {
 
+  private static final ThreadLocal<Map<String, String>> mdcProperties = new ThreadLocal<>();
+
   public static void addMDCProperty(MDCProperty extraProperty) {
-    MDCProps.setMdc(extraProperty.getName(), extraProperty.getValue());
+    final Map<String, String> mdc = mdcProperties.get();
+    if (mdc == null) {
+      Map<String, String > map = new LinkedHashMap<>();
+      map.put(extraProperty.getName(), extraProperty.getValue());
+      mdcProperties.set(map);
+    } else {
+      mdc.put(extraProperty.getName(), extraProperty.getValue());
+      mdcProperties.set(mdc);
+    }
   }
 
   public static String getMdcPropertiesAsString() {
     StringBuilder builder = new StringBuilder();
     System.out.println("Thread ID from AccessLoggingMDC: " + Thread.currentThread().getId());
-//    MDCProps.getTenant().forEach((key, value) -> {
-//      builder.append(key).append(":");
-//      if (value.contains(" ")) {
-//        builder.append("\"").append(value).append("\"");
-//      } else {
-//        builder.append(value);
-//      }
-//      builder.append(" ");
-//    });
-//    return builder.toString();
-    return MDCProps.getTenant();
+    mdcProperties.get().forEach((key, value) -> {
+      builder.append(key).append(":");
+      if (value.contains(" ")) {
+        builder.append("\"").append(value).append("\"");
+      } else {
+        builder.append(value);
+      }
+      builder.append(" ");
+    });
+    return builder.toString();
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    mdcProperties.get().forEach((key, value) -> {
+      builder.append(key).append(":");
+      if (value.contains(" ")) {
+        builder.append("\"").append(value).append("\"");
+      } else {
+        builder.append(value);
+      }
+      builder.append(" ");
+    });
+    return builder.toString();
   }
 
   public static class MDCProperty {

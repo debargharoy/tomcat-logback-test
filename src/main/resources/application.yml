@@ -1,0 +1,18 @@
+access-logging:
+  enabled: true
+  ignored-uri-patterns:
+    - "/meta/*"
+    - "/manage/*"
+    - "/cloudfoundryapplication/*"
+  logback-quiet: true
+  pattern: "%h %l %u [%t{\"yyyy-MM-dd'T'HH:mm:ss,SSSXXX\", UTC}] \"%r\" %s %b \"%i{Referer}\" \"%i{User-Agent}\" \"%i{Host}\" \"%i{Forwarded}\" 0/%D 0 0 \"%i{Cerner-Correlation-ID}\" MDC: %mdc"
+
+#  Username-%X{user_name} Email-%X{user_email} MDC-%X{mdc} %X{mdc1} %X{mdc2} Username-%mdc{user_name} Email-%mdc{user_email} MDC-%mdc{mdc} %mdc{mdc1} %mdc{mdc2}
+custom:
+  env-entry:
+    - name: thing1
+      value: whatchamacolit
+      type: java.lang.String
+    - name: think2
+      value: whositwhatsit
+      type: java.lang.String

@@ -45,6 +45,7 @@ public class CustomValveBean extends LogbackValve {
     appender.start();
     this.addAppender(appender);
     this.addFilter(new AccessFilterToMDC());
+    this.addFilter(new RandomFilter());
   }
 
   private class AccessFilterToMDC extends Filter<IAccessEvent> {
@@ -52,6 +53,7 @@ public class CustomValveBean extends LogbackValve {
     @Override
     public FilterReply decide(final IAccessEvent event) {
       System.out.println("Thread ID: " + Thread.currentThread().getId());
+      System.out.println("Thread Name: " + Thread.currentThread().getName());
       log.info("Setting MDC Properties");
       AccessLoggingMDC.addMDCProperty(new AccessLoggingMDC.MDCProperty("mdc1", "val1"));
       AccessLoggingMDC.addMDCProperty(new AccessLoggingMDC.MDCProperty("mdc2", "val2"));
@@ -60,4 +62,12 @@ public class CustomValveBean extends LogbackValve {
     }
   }
 
+  private class RandomFilter extends Filter<IAccessEvent> {
+    @Override
+    public FilterReply decide(IAccessEvent event) {
+      System.out.println("From randomfilter");
+      System.out.println(AccessLoggingMDC.getMdcPropertiesAsString());
+      return FilterReply.NEUTRAL;
+    }
+  }
 }

@@ -22,6 +22,7 @@ public class AccessLoggingMDC {
   public static String getMdcPropertiesAsString() {
     StringBuilder builder = new StringBuilder();
     System.out.println("Thread ID from AccessLoggingMDC: " + Thread.currentThread().getId());
+    System.out.println("Thread Name from AccessLoggingMDC: " + Thread.currentThread().getName());
     mdcProperties.get().forEach((key, value) -> {
       builder.append(key).append(":");
       if (value.contains(" ")) {

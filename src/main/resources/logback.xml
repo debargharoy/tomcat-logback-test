@@ -1,0 +1,32 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty scope="context" name="console-file-enabled" source="logging.file.enabled"/>
+
+    <if condition='isDefined("console-file-enabled") &amp;&amp; p("console-file-enabled").equals("true")'>
+        <then>
+            <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+                <file>application-log.log</file>
+                <encoder>
+                    <pattern>[%d{yyyy-MMM-dd HH:mm:ss:SSS}] [%level] [%logger] - %mdc %msg%n</pattern>
+                </encoder>
+            </appender>
+
+            <root level="info">
+                <appender-ref ref="FILE"/>
+            </root>
+        </then>
+    </if>
+
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>[%d{yyyy-MMM-dd HH:mm:ss:SSS}] [%level] [%logger] - %mdc %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
